@@ -1,0 +1,324 @@
+{
+  "project": "ClawTeam - AI 原生即时通讯协作平台",
+  "version": "0.1.0",
+  "sprint": "00.sprint-0214~0401",
+  "created_at": "2026-02-14",
+  "updated_at": "2026-02-14",
+  "status": "planning",
+  "tasks": [
+    {
+      "id": "REQ-001",
+      "subject": "完成需求分析与规格说明",
+      "status": "completed",
+      "priority": "P0",
+      "assignee": "Claude",
+      "description": "完成产品需求分析和规格说明文档，包括功能需求、非功能需求、用例定义等",
+      "deliverables": [
+        "00.项目概览.md",
+        "01.产品规格说明.md"
+      ],
+      "links": [
+        "https://github.com/Zhaoyikaiii/clawteam/blob/main/milestone/2026s/00.sprint-0214~0401/00.%E9%A1%B9%E7%9B%AE%E6%A6%82%E8%BF%B0.md",
+        "https://github.com/Zhaoyikaiii/clawteam/blob/main/milestone/2026s/00.sprint-0214~0401/01.%E4%BA%A7%E5%93%81%E8%A7%84%E6%A0%BC%E8%AF%B4%E8%AF%B4.md"
+      ]
+    },
+    {
+      "id": "ARCH-001",
+      "subject": "完成技术架构设计",
+      "status": "completed",
+      "priority": "P0",
+      "assignee": "Claude",
+      "description": "完成技术架构设计，包括服务拆分、数据流、部署架构、技术栈选型（NATS JetStream）等",
+      "deliverables": [
+        "02.技术架构设计.md",
+        "03.Social Brain架构.md",
+        "04.Agent调度算法.md",
+        "06.数据模型设计.md"
+      ],
+      "links": [
+        "https://github.com/Zhaoyikaiii/clawteam/blob/main/milestone/2026s/00.sprint-0214~0401/02.%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1.md",
+        "https://github.com/Zhaoyikaiii/clawteam/blob/main/milestone/2026s/00.sprint-0214~0401/03.Social%20Brain%E6%9E%B6%E6%9E%84.md",
+        "https://github.com/Zhaoyikaiii/clawteam/blob/main/milestone/2026s/00.sprint-0214~0401/04.Agent%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95.md",
+        "https://github.com/Zhaoyikaiii/clawteam/blob/main/milestone/2026s/00.sprint-0214~0401/06.%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1.md"
+      ]
+    },
+    {
+      "id": "MVP-001",
+      "subject": "定义 MVP 范围与交付计划",
+      "status": "completed",
+      "priority": "P0",
+      "assignee": "Claude",
+      "description": "定义 MVP 功能边界、交付计划、验收标准和 10 周排期",
+      "deliverables": [
+        "05.MVP范围定义.md"
+      ],
+      "links": [
+        "https://github.com/Zhaoyikaiii/clawteam/blob/main/milestone/2026s/00.sprint-0214~0401/05.MVP%E8%8C%83%E5%9B%B4%E5%AE%9A%E4%B9%89.md"
+      ]
+    },
+    {
+      "id": "UI-001",
+      "subject": "完成 UI 设计规范 v0.1",
+      "status": "completed",
+      "priority": "P0",
+      "assignee": "Claude",
+      "description": "完成飞书式 UI 设计规范，包括设计 Token、核心组件、交互规范等",
+      "deliverables": [
+        "07.UI设计规格.md"
+      ],
+      "links": [
+        "https://github.com/Zhaoyikaiii/clawteam/blob/main/milestone/2026s/00.sprint-0214~0401/07.UI%E8%AE%BE%E8%AE%A1%E8%A7%84%E6%A0%BC.md"
+      ]
+    },
+    {
+      "id": "INFRA-001",
+      "subject": "搭建基础设施与开发环境",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "搭建开发、测试、生产环境的基础设施，包括 Kubernetes 集群、NATS JetStream、PostgreSQL、Qdrant 等",
+      "deliverables": [
+        "Kubernetes 集群配置",
+        "NATS JetStream 部署",
+        "PostgreSQL 数据库初始化",
+        "Qdrant 向量数据库部署",
+        "CI/CD 流水线配置"
+      ],
+      "blocked_by": [],
+      "estimated_weeks": 1
+    },
+    {
+      "id": "SVC-001",
+      "subject": "实现 IM Core 消息服务",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "实现消息收发、存储、分发核心功能，支持 WebSocket 实时推送",
+      "deliverables": [
+        "消息收发 API",
+        "WebSocket 网关",
+        "消息持久化",
+        "在线状态管理"
+      ],
+      "blocked_by": ["INFRA-001"],
+      "estimated_weeks": 2
+    },
+    {
+      "id": "SVC-002",
+      "subject": "实现 Social Brain 编排服务",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "实现 Social Brain 核心逻辑，包括上下文构建、意图识别、Agent 召回排序、PDP 权限控制等",
+      "deliverables": [
+        "Context Builder",
+        "Intent Classifier",
+        "Agent Recall & Ranker",
+        "Policy Decision Point (PDP)",
+        "Planner & Dispatcher"
+      ],
+      "blocked_by": ["INFRA-001", "SVC-001"],
+      "estimated_weeks": 3
+    },
+    {
+      "id": "SVC-003",
+      "subject": "实现 Agent Runtime 执行环境",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "实现 Agent 执行沙箱，支持技能调用、LLM 推理、工具执行等",
+      "deliverables": [
+        "Agent 执行沙箱",
+        "Skills Framework",
+        "LLM Model Serving 集成",
+        "Tool 执行引擎"
+      ],
+      "blocked_by": ["INFRA-001"],
+      "estimated_weeks": 2
+    },
+    {
+      "id": "SVC-004",
+      "subject": "实现 Global Memory 记忆服务",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "实现全局记忆服务，支持记忆写入、向量检索、自动摘要等",
+      "deliverables": [
+        "Memory Service API",
+        "向量检索集成",
+        "自动摘要生成",
+        "记忆搜索界面"
+      ],
+      "blocked_by": ["INFRA-001"],
+      "estimated_weeks": 2
+    },
+    {
+      "id": "SVC-005",
+      "subject": "实现 Task Service 任务管理",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "实现任务管理服务，支持任务创建、分配、状态流转等",
+      "deliverables": [
+        "Task Service API",
+        "任务状态机",
+        "任务与消息关联"
+      ],
+      "blocked_by": ["INFRA-001"],
+      "estimated_weeks": 1
+    },
+    {
+      "id": "SVC-006",
+      "subject": "实现 Approval 审批服务",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "实现审批服务，支持审批请求创建、用户确认、策略记录等",
+      "deliverables": [
+        "Approval Service API",
+        "审批卡片渲染",
+        "审批策略配置"
+      ],
+      "blocked_by": ["INFRA-001"],
+      "estimated_weeks": 1
+    },
+    {
+      "id": "AGENT-001",
+      "subject": "实现内置 Agent 模板",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "实现 MVP 阶段的 3 个内置 Agent：SummaryAgent、ResearchAgent、TaskAgent",
+      "deliverables": [
+        "@SummaryAgent - 会议总结",
+        "@ResearchAgent - 信息搜索",
+        "@TaskAgent - 任务管理"
+      ],
+      "blocked_by": ["SVC-003"],
+      "estimated_weeks": 1
+    },
+    {
+      "id": "WEB-001",
+      "subject": "实现 Web 前端 - 聊天界面",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "实现 Web 聊天界面，包括消息列表、输入框、@Agent 语法等",
+      "deliverables": [
+        "消息列表组件",
+        "消息输入组件",
+        "@Agent 语法高亮",
+        "消息引用/回复"
+      ],
+      "blocked_by": ["SVC-001"],
+      "estimated_weeks": 2
+    },
+    {
+      "id": "WEB-002",
+      "subject": "实现 Web 前端 - Agent 卡片组件",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "实现 Agent 消息卡片组件，支持结构化内容展示、折叠展开、来源溯源等",
+      "deliverables": [
+        "Agent 卡片组件",
+        "结论/行动项展示",
+        "Meta Bar 展示",
+        "Provenance Drawer"
+      ],
+      "blocked_by": ["WEB-001"],
+      "estimated_weeks": 1
+    },
+    {
+      "id": "WEB-003",
+      "subject": "实现 Web 前端 - Approval 审批组件",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "实现审批卡片组件，支持操作展示、影响范围、来源跳转、用户决策等",
+      "deliverables": [
+        "Approval 卡片组件",
+        "操作详情展示",
+        "允许/拒绝按钮",
+        "策略配置界面"
+      ],
+      "blocked_by": ["WEB-001"],
+      "estimated_weeks": 1
+    },
+    {
+      "id": "WEB-004",
+      "subject": "实现 Web 前端 - 右侧面板",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "实现右侧面板，包括 Memory、Tasks、Agents 三个 Tab",
+      "deliverables": [
+        "Side Panel 容器",
+        "Memory Tab",
+        "Tasks Tab",
+        "Agents Tab"
+      ],
+      "blocked_by": ["WEB-001"],
+      "estimated_weeks": 1
+    },
+    {
+      "id": "WEB-005",
+      "subject": "实现 Web 前端 - Agent 管理",
+      "status": "pending",
+      "priority": "P1",
+      "assignee": null,
+      "description": "实现 Agent 创建、编辑、删除界面",
+      "deliverables": [
+        "Agent 创建向导",
+        "Agent 配置界面",
+        "Agent 列表"
+      ],
+      "blocked_by": ["WEB-001"],
+      "estimated_weeks": 1
+    },
+    {
+      "id": "TEST-001",
+      "subject": "集成测试与性能优化",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "进行端到端集成测试，修复 Bug，优化性能",
+      "deliverables": [
+        "集成测试报告",
+        "性能测试报告",
+        "Bug 修复清单"
+      ],
+      "blocked_by": ["SVC-001", "SVC-002", "SVC-003", "WEB-001"],
+      "estimated_weeks": 2
+    },
+    {
+      "id": "DEPLOY-001",
+      "subject": "MVP 上线准备",
+      "status": "pending",
+      "priority": "P0",
+      "assignee": null,
+      "description": "准备 MVP 上线，包括生产环境部署、监控配置、文档准备等",
+      "deliverables": [
+        "生产环境部署",
+        "监控告警配置",
+        "用户文档",
+        "API 文档"
+      ],
+      "blocked_by": ["TEST-001"],
+      "estimated_weeks": 1
+    }
+  ],
+  "summary": {
+    "total": 18,
+    "by_status": {
+      "completed": 4,
+      "pending": 14,
+      "in_progress": 0
+    },
+    "by_priority": {
+      "P0": 16,
+      "P1": 2
+    },
+    "estimated_weeks": 10
+  }
+}
