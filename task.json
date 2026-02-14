@@ -4,6 +4,8 @@
   "sprint": "00.sprint-0214~0401",
   "created_at": "2026-02-14",
   "updated_at": "2026-02-14",
+  "phase": "POC Development",
+  "notes": "文档完成，代码实现处于早期POC阶段",
   "tasks": [
     {
       "id": "REQ-001",
@@ -99,7 +101,9 @@
         "消息持久化",
         "在线状态管理"
       ],
-      "blocked_by": ["INFRA-001"],
+      "blocked_by": [
+        "INFRA-001"
+      ],
       "estimated_weeks": 2
     },
     {
@@ -116,7 +120,10 @@
         "Policy Decision Point (PDP)",
         "Planner & Dispatcher"
       ],
-      "blocked_by": ["INFRA-001", "SVC-001"],
+      "blocked_by": [
+        "INFRA-001",
+        "SVC-001"
+      ],
       "estimated_weeks": 3
     },
     {
@@ -127,12 +134,26 @@
       "assignee": null,
       "description": "实现 Agent 执行沙箱，支持技能调用、LLM 推理、工具执行等。统一使用 Go 语言实现。",
       "deliverables": [
-        "Agent 执行沙箱 (Go)",
-        "Skills Framework (Go)",
-        "LLM Model Serving 集成 (Anthropic API)",
-        "Tool 执行引擎 (Go)"
+        "Agent 执行沙箱 (Go) - 骨架完成",
+        "Skills Framework (Go) - 待实现",
+        "LLM Model Serving 集成 (Anthropic API) - 完成",
+        "Tool 执行引擎 (Go) - 待实现"
       ],
-      "blocked_by": ["INFRA-001"],
+      "progress": {
+        "percentage": 25,
+        "completed": [
+          "基础结构",
+          "LLM Client"
+        ],
+        "pending": [
+          "Skills Framework",
+          "Tool 执行引擎",
+          "完整集成测试"
+        ]
+      },
+      "blocked_by": [
+        "INFRA-001"
+      ],
       "estimated_weeks": 2
     },
     {
@@ -148,22 +169,38 @@
         "自动摘要生成",
         "记忆搜索界面"
       ],
-      "blocked_by": ["INFRA-001"],
+      "blocked_by": [
+        "INFRA-001"
+      ],
       "estimated_weeks": 2
     },
     {
       "id": "SVC-005",
       "subject": "实现 Task Service 任务管理",
-      "status": "pending",
+      "status": "in_progress",
       "priority": "P0",
       "assignee": null,
       "description": "实现任务管理服务，支持任务创建、分配、状态流转等",
       "deliverables": [
-        "Task Service API",
-        "任务状态机",
-        "任务与消息关联"
+        "Task Service API - 待实现",
+        "任务状态机 - 已完成 (含单元测试)",
+        "任务与消息关联 - 待实现"
       ],
-      "blocked_by": ["INFRA-001"],
+      "progress": {
+        "percentage": 33,
+        "completed": [
+          "状态机核心逻辑",
+          "单元测试"
+        ],
+        "pending": [
+          "REST API",
+          "消息关联",
+          "持久化层"
+        ]
+      },
+      "blocked_by": [
+        "INFRA-001"
+      ],
       "estimated_weeks": 1
     },
     {
@@ -178,7 +215,9 @@
         "审批卡片渲染",
         "审批策略配置"
       ],
-      "blocked_by": ["INFRA-001"],
+      "blocked_by": [
+        "INFRA-001"
+      ],
       "estimated_weeks": 1
     },
     {
@@ -193,7 +232,9 @@
         "@ResearchAgent - 信息搜索",
         "@TaskAgent - 任务管理"
       ],
-      "blocked_by": ["SVC-003"],
+      "blocked_by": [
+        "SVC-003"
+      ],
       "estimated_weeks": 1
     },
     {
@@ -209,7 +250,9 @@
         "@Agent 语法高亮",
         "消息引用/回复"
       ],
-      "blocked_by": ["SVC-001"],
+      "blocked_by": [
+        "SVC-001"
+      ],
       "estimated_weeks": 2
     },
     {
@@ -225,7 +268,9 @@
         "Meta Bar 展示",
         "Provenance Drawer"
       ],
-      "blocked_by": ["WEB-001"],
+      "blocked_by": [
+        "WEB-001"
+      ],
       "estimated_weeks": 1
     },
     {
@@ -241,7 +286,9 @@
         "允许/拒绝按钮",
         "策略配置界面"
       ],
-      "blocked_by": ["WEB-001"],
+      "blocked_by": [
+        "WEB-001"
+      ],
       "estimated_weeks": 1
     },
     {
@@ -257,7 +304,9 @@
         "Tasks Tab",
         "Agents Tab"
       ],
-      "blocked_by": ["WEB-001"],
+      "blocked_by": [
+        "WEB-001"
+      ],
       "estimated_weeks": 1
     },
     {
@@ -272,8 +321,70 @@
         "Agent 配置界面",
         "Agent 列表"
       ],
-      "blocked_by": ["WEB-001"],
+      "blocked_by": [
+        "WEB-001"
+      ],
       "estimated_weeks": 1
+    },
+    {
+      "id": "INFRA-002",
+      "subject": "添加 Docker 容器化配置",
+      "status": "completed",
+      "priority": "P0",
+      "assignee": "Claude",
+      "description": "创建 Dockerfile 和 docker-compose.yml，支持本地开发环境一键启动",
+      "deliverables": [
+        "Dockerfile (Agent Runtime)",
+        "Dockerfile (Task Service)",
+        "docker-compose.yml (包含 PostgreSQL, NATS, Qdrant)"
+      ],
+      "blocked_by": [],
+      "estimated_weeks": 0.5
+    },
+    {
+      "id": "INFRA-003",
+      "subject": "添加数据库迁移脚本",
+      "status": "completed",
+      "priority": "P0",
+      "assignee": "Claude",
+      "description": "基于数据模型设计文档创建 SQL 迁移脚本，支持版本管理",
+      "deliverables": [
+        "migrations/ 目录结构",
+        "001_initial_schema.sql (users, workspaces, channels, messages, etc.)",
+        "迁移工具集成"
+      ],
+      "blocked_by": [],
+      "estimated_weeks": 0.5
+    },
+    {
+      "id": "CODE-001",
+      "subject": "添加项目构建工具与脚本",
+      "status": "completed",
+      "priority": "P0",
+      "assignee": "Claude",
+      "description": "添加 Makefile 或构建脚本，支持开发、测试、构建、���署等常用命令",
+      "deliverables": [
+        "Makefile (dev, test, build, run, clean)",
+        "scripts/ 目录 (辅助脚本)",
+        "pre-commit hooks"
+      ],
+      "blocked_by": [],
+      "estimated_weeks": 0.5
+    },
+    {
+      "id": "CODE-002",
+      "subject": "完善 Go 依赖与项目结构",
+      "status": "completed",
+      "priority": "P0",
+      "assignee": "Claude",
+      "description": "补充缺失的 Go 依赖包，完善项目目录结构，确保可编译运行",
+      "deliverables": [
+        "补充 go.mod 依赖",
+        "创建 cmd/ 目录下各服务入口",
+        "统一错误处理与日志模块"
+      ],
+      "blocked_by": [],
+      "estimated_weeks": 0.5
     },
     {
       "id": "TEST-001",
@@ -287,7 +398,12 @@
         "性能测试报告",
         "Bug 修复清单"
       ],
-      "blocked_by": ["SVC-001", "SVC-002", "SVC-003", "WEB-001"],
+      "blocked_by": [
+        "SVC-001",
+        "SVC-002",
+        "SVC-003",
+        "WEB-001"
+      ],
       "estimated_weeks": 2
     },
     {
@@ -303,21 +419,24 @@
         "用户文档",
         "API 文档"
       ],
-      "blocked_by": ["TEST-001"],
+      "blocked_by": [
+        "TEST-001"
+      ],
       "estimated_weeks": 1
     }
   ],
   "summary": {
-    "total": 18,
+    "total": 22,
     "by_status": {
-      "completed": 5,
-      "pending": 13,
-      "in_progress": 0
+      "completed": 9,
+      "pending": 11,
+      "in_progress": 2
     },
     "by_priority": {
-      "P0": 16,
+      "P0": 20,
       "P1": 2
     },
-    "estimated_weeks": 10
+    "estimated_weeks": 10,
+    "status_note": "文档完成 (9/22)，基础设施容器化完成 (Redis/Qdrant运行中)，代码实现进行中 (2/22)"
   }
 }

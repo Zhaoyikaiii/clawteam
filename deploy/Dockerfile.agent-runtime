@@ -1,0 +1,53 @@
+# Agent Runtime Service Dockerfile
+# Multi-stage build for optimal image size
+
+# Build stage
+FROM golang:1.23-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache git make
+
+WORKDIR /src
+
+# Copy go mod files first for better caching
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o agent-runtime ./cmd/agent-runtime
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o task-service ./cmd/task-service
+
+# Runtime stage
+FROM alpine:3.19
+
+# Install runtime dependencies
+RUN apk add --no-cache ca-certificates tzdata
+
+# Create non-root user
+RUN addgroup -g 1000 clawteam && \
+    adduser -D -u 1000 -G clawteam clawteam
+
+WORKDIR /app
+
+# Copy binaries from builder
+COPY --from=builder /src/agent-runtime .
+COPY --from=builder /src/task-service .
+
+# Copy configuration
+COPY .env.example .env
+
+# Switch to non-root user
+USER clawteam
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1
+
+# Default port
+EXPOSE 8000
+
+# Run the application (default to agent-runtime)
+CMD ["./agent-runtime"]

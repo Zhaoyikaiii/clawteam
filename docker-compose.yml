@@ -1,0 +1,89 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: clawteam-postgres
+    environment:
+      POSTGRES_DB: clawteam
+      POSTGRES_USER: clawteam
+      POSTGRES_PASSWORD: clawteam_dev_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "15432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./deploy/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clawteam"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - clawteam-network
+
+  nats:
+    image: nats:2.10-alpine
+    container_name: clawteam-nats
+    command: "-js -m 8222 --store_dir /data --cluster_name nats --http_port 8222"
+    environment:
+      NATS_PASSWORD: nats_dev_password
+    ports:
+      - "14222:4222"
+      - "16222:6222"
+      - "18222:8222"
+    volumes:
+      - nats_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8222/varz || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - clawteam-network
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: clawteam-qdrant
+    environment:
+      QDRANT__SERVICE__GRPC_PORT: 6334
+    ports:
+      - "16333:6333"
+      - "16334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:6333/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - clawteam-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: clawteam-redis
+    command: "--requirepass redis_dev_password --appendonly yes"
+    ports:
+      - "16379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - clawteam-network
+
+volumes:
+  postgres_data:
+    driver: local
+  nats_data:
+    driver: local
+  qdrant_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  clawteam-network:
+    driver: bridge
