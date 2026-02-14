@@ -4,7 +4,6 @@
   "sprint": "00.sprint-0214~0401",
   "created_at": "2026-02-14",
   "updated_at": "2026-02-14",
-  "status": "planning",
   "tasks": [
     {
       "id": "REQ-001",
@@ -122,16 +121,16 @@
     },
     {
       "id": "SVC-003",
-      "subject": "实现 Agent Runtime 执行环境",
-      "status": "pending",
+      "subject": "实现 Agent Runtime 执行环境 (Go)",
+      "status": "in_progress",
       "priority": "P0",
       "assignee": null,
-      "description": "实现 Agent 执行沙箱，支持技能调用、LLM 推理、工具执行等",
+      "description": "实现 Agent 执行沙箱，支持技能调用、LLM 推理、工具执行等。统一使用 Go 语言实现。",
       "deliverables": [
-        "Agent 执行沙箱",
-        "Skills Framework",
-        "LLM Model Serving 集成",
-        "Tool 执行引擎"
+        "Agent 执行沙箱 (Go)",
+        "Skills Framework (Go)",
+        "LLM Model Serving 集成 (Anthropic API)",
+        "Tool 执行引擎 (Go)"
       ],
       "blocked_by": ["INFRA-001"],
       "estimated_weeks": 2
@@ -311,8 +310,8 @@
   "summary": {
     "total": 18,
     "by_status": {
-      "completed": 4,
-      "pending": 14,
+      "completed": 5,
+      "pending": 13,
       "in_progress": 0
     },
     "by_priority": {
