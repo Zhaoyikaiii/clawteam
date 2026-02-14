@@ -3,12 +3,11 @@
 
 .PHONY: help dev test build run clean docker-up docker-down docker-logs deps fmt lint
 
-# Default target
 .DEFAULT_GOAL := help
 
 # Variables
 BINARY_NAME_AGENT=agent-runtime
-BINARY_NAME_TASK=task-service
+BINARY_NAME_IM=im-core
 BUILD_DIR=build
 CMD_DIR=cmd
 DOCKER_COMPOSE=docker-compose
@@ -22,7 +21,7 @@ COLOR_SUCCESS=\033[32m
 COLOR_WARNING=\033[33m
 COLOR_ERROR=\033[31m
 
-help: ## Show this help message
+help:
 	@echo '$(COLOR_SUCCESS)ClawTeam Development Commands$(COLOR_RESET)'
 	@echo ''
 	@echo '$(COLOR_INFO)Available targets:$(COLOR_RESET)'
@@ -32,23 +31,12 @@ help: ## Show this help message
 ## Development
 ## ===================================================================
 
-dev: ## Start development environment (services + infrastructure)
+dev:
 	@echo '$(COLOR_INFO)Starting development environment...$(COLOR_RESET)'
 	@$(MAKE) docker-up
 	@echo '$(COLOR_SUCCESS)✓ Development environment is ready$(COLOR_RESET)'
-	@echo ''
-	@echo '$(COLOR_INFO)Services:$(COLOR_RESET)'
-	@echo '  - PostgreSQL:  localhost:5432'
-	@echo '  - NATS:       localhost:4222'
-	@echo '  - Qdrant:     localhost:6333'
-	@echo '  - Redis:      localhost:6379'
-	@echo '  - Jaeger UI:  http://localhost:16686'
-	@echo ''
-	@echo '$(COLOR_INFO)Demo credentials:$(COLOR_RESET)'
-	@echo '  Database: clawteam/clawteam/clawteam_dev_password'
-	@echo '  Demo user: demo@clawteam.dev'
 
-deps: ## Download Go dependencies
+deps:
 	@echo '$(COLOR_INFO)Downloading dependencies...$(COLOR_RESET)'
 	@$(GO) mod download
 	@$(GO) mod tidy
@@ -58,68 +46,65 @@ deps: ## Download Go dependencies
 ## Build
 ## ===================================================================
 
-build: ## Build all service binaries
+build:
 	@echo '$(COLOR_INFO)Building services...$(COLOR_RESET)'
 	@mkdir -p $(BUILD_DIR)
 	@echo '  Building $(BINARY_NAME_AGENT)...'
 	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GO) build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME_AGENT) ./$(CMD_DIR)/agent-runtime
-	@echo '  Building $(BINARY_NAME_TASK)...'
-	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GO) build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME_TASK) ./$(CMD_DIR)/task-service
+	@echo '  Building $(BINARY_NAME_IM)...'
+	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GO) build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME_IM) ./$(CMD_DIR)/im-core
 	@echo '$(COLOR_SUCCESS)✓ Build complete$(COLOR_RESET)'
 
-build-linux: ## Build binaries for Linux (Docker)
+build-linux:
 	@echo '$(COLOR_INFO)Building Linux binaries...$(COLOR_RESET)'
 	@mkdir -p $(BUILD_DIR)
+	@echo '  Building $(BINARY_NAME_AGENT)...'
 	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME_AGENT) ./$(CMD_DIR)/agent-runtime
-	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME_TASK) ./$(CMD_DIR)/task-service
+	@echo '  Building $(BINARY_NAME_IM)...'
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME_IM) ./$(CMD_DIR)/im-core
 	@echo '$(COLOR_SUCCESS)✓ Linux build complete$(COLOR_RESET)'
 
 ## ===================================================================
 ## Run
 ## ===================================================================
 
-run-agent: ## Run agent runtime locally
+run-agent:
 	@echo '$(COLOR_INFO)Starting Agent Runtime...$(COLOR_RESET)'
 	@$(GO) run ./$(CMD_DIR)/agent-runtime/main.go
 
-run-task: ## Run task service locally
-	@echo '$(COLOR_INFO)Starting Task Service...$(COLOR_RESET)'
-	@$(GO) run ./$(CMD_DIR)/task-service/main.go
+run-im:
+	@echo '$(COLOR_INFO)Starting IM Core Service...$(COLOR_RESET)'
+	@$(GO) run ./$(CMD_DIR)/im-core/main.go
 
 ## ===================================================================
 ## Test
 ## ===================================================================
 
-test: ## Run all tests
+test:
 	@echo '$(COLOR_INFO)Running tests...$(COLOR_RESET)'
 	@$(GO) test -v -race -coverprofile=coverage.out ./...
 	@$(GO) tool cover -html=coverage.out -o coverage.html
 	@echo '$(COLOR_SUCCESS)✓ Tests passed. Coverage report: coverage.html$(COLOR_RESET)'
 
-test-short: ## Run tests without race detector
+test-short:
 	@echo '$(COLOR_INFO)Running tests (fast)...$(COLOR_RESET)'
 	@$(GO) test -v ./...
-
-test-coverage: ## Show test coverage
-	@echo '$(COLOR_INFO)Test coverage:$(COLOR_RESET)'
-	@$(GO) test -cover ./...
 
 ## ===================================================================
 ## Code Quality
 ## ===================================================================
 
-fmt: ## Format all Go code
+fmt:
 	@echo '$(COLOR_INFO)Formatting code...$(COLOR_RESET)'
 	@$(GO) fmt ./...
 	@echo '$(COLOR_SUCCESS)✓ Code formatted$(COLOR_RESET)'
 
-lint: ## Run linter (requires golangci-lint)
+lint:
 	@echo '$(COLOR_INFO)Running linter...$(COLOR_RESET)'
-	@which golangci-lint > /dev/null || (echo '$(COLOR_ERROR)golangci-lint not installed. Run:$(COLOR_RESET) brew install golangci-lint' && exit 1)
 	@golangci-lint run ./...
 	@echo '$(COLOR_SUCCESS)✓ Lint passed$(COLOR_RESET)'
 
-vet: ## Run go vet
+vet:
 	@echo '$(COLOR_INFO)Running go vet...$(COLOR_RESET)'
 	@$(GO) vet ./...
 	@echo '$(COLOR_SUCCESS)✓ Vet passed$(COLOR_RESET)'
@@ -128,59 +113,38 @@ vet: ## Run go vet
 ## Docker
 ## ===================================================================
 
-docker-up: ## Start all infrastructure services
+docker-up:
 	@echo '$(COLOR_INFO)Starting infrastructure...$(COLOR_RESET)'
-	@$(DOCKER_COMPOSE) up -d postgres nats qdrant redis jaeger
+	@$(DOCKER_COMPOSE) up -d redis qdrant
 	@echo '$(COLOR_SUCCESS)✓ Infrastructure started$(COLOR_RESET)'
 
-docker-down: ## Stop all infrastructure services
+docker-down:
 	@echo '$(COLOR_INFO)Stopping infrastructure...$(COLOR_RESET)'
 	@$(DOCKER_COMPOSE) down
 	@echo '$(COLOR_SUCCESS)✓ Infrastructure stopped$(COLOR_RESET)'
 
-docker-restart: docker-down docker-up ## Restart infrastructure
+docker-restart: docker-down docker-up
 
-docker-logs: ## Show logs from all services
+docker-logs:
 	@$(DOCKER_COMPOSE) logs -f
 
-docker-logs-postgres: ## Show PostgreSQL logs
-	@$(DOCKER_COMPOSE) logs -f postgres
-
-docker-logs-nats: ## Show NATS logs
-	@$(DOCKER_COMPOSE) logs -f nats
-
-docker-ps: ## Show running containers
+docker-ps:
 	@$(DOCKER_COMPOSE) ps
-
-docker-build: ## Build Docker images
-	@echo '$(COLOR_INFO)Building Docker images...$(COLOR_RESET)'
-	@docker build -f deploy/Dockerfile.agent-runtime -t clawteam/agent-runtime:latest .
-	@docker build -f deploy/Dockerfile.agent-runtime -t clawteam/task-service:latest --target=task-service .
-	@echo '$(COLOR_SUCCESS)✓ Docker images built$(COLOR_RESET)'
-
-docker-clean: ## Remove Docker volumes and containers
-	@echo '$(COLOR_WARNING)This will delete all data. Continue? [y/N]$(COLOR_RESET)'
-	@read -r confirmation; \
-	if [ "$$confirmation" = "y" ] || [ "$$confirmation" = "Y" ]; then \
-		$(DOCKER_COMPOSE) down -v; \
-		echo '$(COLOR_SUCCESS)✓ Docker cleanup complete$(COLOR_RESET)'; \
-	else \
-		echo 'Aborted.'; \
-	fi
 
 ## ===================================================================
 ## Database
 ## ===================================================================
 
-db-connect: ## Connect to PostgreSQL (requires psql)
+db-connect:
+	@echo '$(COLOR_INFO)Connecting to database...$(COLOR_RESET)'
 	@psql -h localhost -U clawteam -d clawteam
 
-db-migrate: ## Run database migrations
+db-migrate:
 	@echo '$(COLOR_INFO)Running migrations...$(COLOR_RESET)'
 	@psql -h localhost -U clawteam -d clawteam -f deploy/init-db.sql
 	@echo '$(COLOR_SUCCESS)✓ Migrations complete$(COLOR_RESET)'
 
-db-reset: ## Reset database (dangerous!)
+db-reset:
 	@echo '$(COLOR_WARNING)This will delete all data. Continue? [y/N]$(COLOR_RESET)'
 	@read -r confirmation; \
 	if [ "$$confirmation" = "y" ] || [ "$$confirmation" = "Y" ]; then \
@@ -196,14 +160,14 @@ db-reset: ## Reset database (dangerous!)
 ## Clean
 ## ===================================================================
 
-clean: ## Clean build artifacts
+clean:
 	@echo '$(COLOR_INFO)Cleaning build artifacts...$(COLOR_RESET)'
 	@rm -rf $(BUILD_DIR)
 	@rm -f coverage.out coverage.html
 	@$(GO) clean
 	@echo '$(COLOR_SUCCESS)✓ Clean complete$(COLOR_RESET)'
 
-clean-all: clean ## Clean everything including Docker
+clean-all: clean
 	@echo '$(COLOR_WARNING)Cleaning everything...$(COLOR_RESET)'
 	@rm -rf $(BUILD_DIR)
 	@rm -f coverage.out coverage.html

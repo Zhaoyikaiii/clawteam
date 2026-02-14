@@ -4,6 +4,9 @@ go 1.23.0
 
 require (
 	github.com/anthropics/anthropic-sdk-go v1.22.1
+	github.com/google/uuid v1.4.0
+	github.com/gorilla/mux v1.8.1
+	github.com/gorilla/websocket v1.5.3
 	github.com/spf13/viper v1.19.0
 )
 

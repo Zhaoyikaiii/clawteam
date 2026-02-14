@@ -91,9 +91,9 @@
     {
       "id": "SVC-001",
       "subject": "实现 IM Core 消息服务",
-      "status": "pending",
+      "status": "completed",
       "priority": "P0",
-      "assignee": null,
+      "assignee": "Claude",
       "description": "实现消息收发、存储、分发核心功能，支持 WebSocket 实时推送",
       "deliverables": [
         "消息收发 API",
@@ -428,7 +428,7 @@
   "summary": {
     "total": 22,
     "by_status": {
-      "completed": 9,
+      "completed": 10,
       "pending": 11,
       "in_progress": 2
     },
@@ -437,6 +437,6 @@
       "P1": 2
     },
     "estimated_weeks": 10,
-    "status_note": "文档完成 (9/22)，基础设施容器化完成 (Redis/Qdrant运行中)，代码实现进行中 (2/22)"
+    "status_note": "文档完成 (10/22)��基础设施容器化完成 (Redis/Qdrant运行中)，IM Core 服务完成，其他服务进行中 (2/22)"
   }
 }
